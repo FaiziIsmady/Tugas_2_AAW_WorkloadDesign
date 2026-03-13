@@ -1,11 +1,14 @@
 import json
+import uuid
+
 import pika
 
 
 QUEUE_NAME = "broadcast_queue"
 
 
-def publish_broadcast_event(message):
+def publish_broadcast_event(action, message="", message_id=None):
+    resolved_message_id = message_id or uuid.uuid4().hex[:8]
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host="localhost")
     )
@@ -14,7 +17,9 @@ def publish_broadcast_event(message):
     channel.queue_declare(queue=QUEUE_NAME)
 
     event = {
-        "event_type": "broadcast.sent",
+        "event_type": f"broadcast.{action}",
+        "action": action,
+        "message_id": resolved_message_id,
         "message": message,
     }
 
