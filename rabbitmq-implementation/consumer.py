@@ -15,12 +15,25 @@ from broadcast.models import BroadcastMessage, ConsumerEventLog
 QUEUE_NAME = "broadcast_queue"
 
 
+credentials = pika.PlainCredentials("guest", "guest")
+
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host="localhost")
+    pika.ConnectionParameters(
+        host="127.0.0.1",
+        port=5672,
+        virtual_host="/",
+        credentials=credentials,
+    )
 )
+
 channel = connection.channel()
 
-channel.queue_declare(queue=QUEUE_NAME)
+channel.queue_declare(
+    queue=QUEUE_NAME,
+    durable=False,
+    exclusive=False,
+    auto_delete=False,
+)
 
 
 def callback(ch, method, properties, body):
