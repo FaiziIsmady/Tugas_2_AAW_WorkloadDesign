@@ -21,7 +21,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 500px;
+            max-width: 760px;
         }
 
         h1 {
@@ -30,6 +30,26 @@
             text-align: center;
         }
 
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .toolbar a {
+            color: #1d4ed8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        select,
         input[type="text"] {
             width: 100%;
             padding: 12px;
@@ -37,6 +57,17 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 120px;
         }
 
         button {
@@ -63,20 +94,62 @@
             margin-top: 16px;
             color: red;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 28px;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f8fafc;
+        }
+
+        .status {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>Attention All</h1>
+        <div class="toolbar">
+            <h1>Attention All</h1>
+            <a href="/consumer/">Consumer Dashboard</a>
+        </div>
 
         <form method="post">
             {% csrf_token %}
+            <label for="action">Action</label>
+            <select id="action" name="action">
+                <option value="create">Create</option>
+                <option value="update">Update</option>
+                <option value="delete">Delete</option>
+            </select>
+
+            <label for="message_id">Message ID</label>
             <input
+                id="message_id"
                 type="text"
-                name="broadcast_message"
-                placeholder="Enter broadcast message"
+                name="message_id"
+                placeholder="Leave empty for create, fill for update/delete"
             >
-            <button type="submit">Broadcast</button>
+
+            <label for="broadcast_message">Message</label>
+            <textarea
+                id="broadcast_message"
+                name="broadcast_message"
+                placeholder="Required for create and update"
+            ></textarea>
+
+            <button type="submit">Send Event</button>
         </form>
 
         {% if success %}
@@ -86,6 +159,33 @@
         {% if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Message ID</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Last Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in messages %}
+                    <tr>
+                        <td>{{ item.external_id }}</td>
+                        <td>{{ item.message|default:"-" }}</td>
+                        <td class="status">
+                            {% if item.is_deleted %}Deleted{% else %}Active{% endif %}
+                        </td>
+                        <td>{{ item.last_action }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No consumed messages yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
