@@ -7,6 +7,8 @@
 ## Deskripsi
 Project ini mengimplementasikan sistem event-driven sederhana menggunakan Django sebagai web interface dan RabbitMQ sebagai message broker. User dapat mengirim pesan broadcast melalui halaman web, lalu pesan tersebut dikirim sebagai event ke RabbitMQ dan diproses oleh consumer secara real-time.
 
+## Soal 1: Implementasikan sistem event-driven sederhana menggunakan Kafka atau RabbitMQ untuk mengirim dan memproses event antar komponen aplikasi 
+
 ## Tujuan Implementasi
 Tujuan dari project ini adalah memenuhi requirement tugas workload design, yaitu:
 - mengimplementasikan sistem event-driven sederhana menggunakan message broker
@@ -50,6 +52,8 @@ Alur komunikasi sistem:
 - Django
 - RabbitMQ
 - Docker Compose
+
+## Soal 2: Buat minimal satu producer dan satu consumer yang saling berkomunikasi melalui message broker
 
 ## Implementasi Producer
 Producer diimplementasikan pada sisi Django, yaitu ketika user men-submit form broadcast. Data pesan dari form dikirim ke RabbitMQ sebagai event JSON.
@@ -122,6 +126,8 @@ Aplikasi dapat diakses melalui:
 http://127.0.0.1:8000
 ```
 
+## Soal 3: Demonstrasikan bagaimana event dikirim, disimpan dalam topic/queue, dan diproses oleh consumer secara real-time
+
 ## Cara Pengujian
 Pengujian dilakukan dengan langkah berikut:
 1. Menjalankan RabbitMQ menggunakan Docker
@@ -148,6 +154,8 @@ Hal ini menunjukkan bahwa:
 - producer berhasil mengirim event
 - event masuk ke queue RabbitMQ
 - consumer memproses event secara real-time
+
+## Soal 4: Lakukan pengujian dengan mengirim beberapa event dan jelaskan bagaimana mekanisme komunikasi asynchronous tersebut bekerja serta apa perbedaannya dengan komunikasi request–response biasa 
 
 ## Mekanisme Komunikasi Asynchronous
 Pada implementasi ini, komunikasi berlangsung secara asynchronous. Producer tidak memproses pesan langsung sampai selesai, tetapi hanya mengirim event ke message broker. Setelah itu, consumer mengambil event dari queue dan memprosesnya secara terpisah.
@@ -180,13 +188,6 @@ Beberapa asumsi dan keputusan implementasi dalam project ini:
 - frontend dibuat sederhana menggunakan Django template
 - producer diintegrasikan ke dalam Django view
 - consumer dijalankan sebagai proses terpisah
-
-## Dokumentasi Tambahan yang Sebaiknya Disertakan
-Agar dokumentasi lebih lengkap, sebaiknya tambahkan:
-- screenshot halaman web broadcast
-- screenshot terminal consumer
-- screenshot RabbitMQ Management UI
-- contoh beberapa pesan broadcast yang diuji
 
 ## Penggunaan Generative AI
 Dalam pengerjaan tugas ini, saya **menggunakan** alat berbasis Generative AI untuk membantu:
